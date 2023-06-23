@@ -27,8 +27,19 @@
 
         input {
             width: 100%;
-            padding: 5px;
+            padding: 8px;
             margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f8f8f8;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        input:focus {
+            background-color: #fff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
         }
 
         button {
@@ -39,17 +50,25 @@
             background-color: #4caf50;
             color: #fff;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         th, td {
-            padding: 8px;
+            padding: 12px 8px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
@@ -57,6 +76,7 @@
         th {
             background-color: #4caf50;
             color: #fff;
+            font-weight: normal;
         }
 
         tfoot td {
@@ -91,71 +111,62 @@
         }
     </style>
     <script>
-        function calcularDesconto() {
-            var taxaJuros = parseFloat(document.getElementById('taxa_juros').value);
-            var cheques = document.getElementsByClassName('cheque');
-            var tabelaResultado = document.getElementById('tabela-resultado');
-            var tbody = tabelaResultado.querySelector('tbody');
-            tbody.innerHTML = ''; // Limpar o corpo da tabela antes de calcular novamente
+		function calcularDesconto() {
+			var taxaJuros = parseFloat(document.getElementById('taxa_juros').value);
+			var cheques = document.getElementsByClassName('cheque');
 
-            var valorTotalCheques = 0;
-            var totalDesconto = 0;
-            var totalDescontado = 0;
+			var tabelaResultado = document.getElementById('tabela-resultado');
+			var tbody = tabelaResultado.querySelector('tbody');
+			tbody.innerHTML = '';
 
-            for (var i = 0; i < cheques.length; i++) {
-                var valorCheque = parseFloat(cheques[i].querySelector('.valor_cheque').value);
-                var data = cheques[i].querySelector('.data').value;
-                var desconto = valorCheque * (taxaJuros / 100);
-                var valorLiquido = valorCheque - desconto;
+			var valorTotalCheques = 0;
+			var totalDesconto = 0;
+			var totalDescontado = 0;
 
-                var row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${valorCheque.toFixed(2)}</td>
-                    <td>${data}</td>
-                    <td>${desconto.toFixed(2)}</td>
-                    <td>${valorLiquido.toFixed(2)}</td>
-                `;
+			for (var i = 0; i < cheques.length; i++) {
+				var valorCheque = parseFloat(cheques[i].querySelector('.valor_cheque').value);
+				var data = cheques[i].querySelector('.data').value;
+				var dataVencimento = new Date(data);
+				dataVencimento.setDate(dataVencimento.getDate() + 2); // Adiciona 2 dias para compensação
 
-                tbody.appendChild(row);
+				var desconto = (valorCheque * taxaJuros) / 100;
+				var valorLiquido = valorCheque - desconto;
 
-                valorTotalCheques += valorCheque;
-                totalDesconto += desconto;
-                totalDescontado += valorLiquido;
-            }
+				var row = document.createElement('tr');
+				row.innerHTML = `
+					<td>$${valorCheque.toFixed(2)}</td>
+					<td>${data}</td>
+					<td>$${desconto.toFixed(2)}</td>
+					<td>$${valorLiquido.toFixed(2)}</td>
+				`;
 
-            var tfoot = tabelaResultado.querySelector('tfoot');
-            tfoot.innerHTML = '';
-            var totalRow = document.createElement('tr');
-            totalRow.innerHTML = `
-                <td colspan="4">
-                    <strong>Total</strong>
-                </td>
-                <td>${valorTotalCheques.toFixed(2)}</td>
-                <td></td>
-                <td>${totalDesconto.toFixed(2)}</td>
-                <td>${totalDescontado.toFixed(2)}</td>
-            `;
-            tfoot.appendChild(totalRow);
-        }
+				tbody.appendChild(row);
 
-        function adicionarCheque() {
-            var chequesWrapper = document.getElementById('cheques');
-            var novoCheque = document.createElement('div');
-            novoCheque.className = 'cheque';
-            novoCheque.innerHTML = `
-                <label for="valor_cheque_${chequesWrapper.childElementCount + 1}">Valor do Cheque:</label>
-                <input type="number" class="valor_cheque" step="0.01" required>
-                <label for="data_${chequesWrapper.childElementCount + 1}">Data:</label>
-                <input type="date" class="data" required>
-            `;
-            chequesWrapper.appendChild(novoCheque);
-        }
+				valorTotalCheques += valorCheque;
+				totalDesconto += desconto;
+				totalDescontado += valorLiquido;
+			}
+
+			var tfoot = tabelaResultado.querySelector('tfoot');
+			tfoot.innerHTML = '';
+			var totalRow = document.createElement('tr');
+			totalRow.innerHTML = `
+				<td colspan="4">
+					<strong>Total</strong>
+				</td>
+				<td>$${valorTotalCheques.toFixed(2)}</td>
+				<td></td>
+				<td>$${totalDesconto.toFixed(2)}</td>
+				<td>$${totalDescontado.toFixed(2)}</td>
+			`;
+			tfoot.appendChild(totalRow);
+		}
     </script>
 </head>
 <body>
     <h1>Calculadora de Desconto</h1>
     <label for="taxa_juros">Taxa de Juros Mensal (%):</label>
-    <input type="number" id="taxa_juros" step="0.01" required><br><br>
+    <input type="number" id="taxa_juros" step="0.01" required>
 
     <h3>Cheques:</h3>
     <div id="cheques">
@@ -166,7 +177,7 @@
             <input type="date" class="data" required>
         </div>
     </div>
-    <button type="button" onclick="adicionarCheque()">Adicionar Cheque</button><br><br>
+    <button type="button" onclick="adicionarCheque()">Adicionar Cheque</button>
 
     <button type="button" onclick="calcularDesconto()">Calcular</button>
 
@@ -183,5 +194,9 @@
         <tbody></tbody>
         <tfoot></tfoot>
     </table>
+
+    <script>
+        // Código JavaScript aqui...
+    </script>
 </body>
 </html>
