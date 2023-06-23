@@ -6,8 +6,8 @@
         function calcularDesconto() {
             var taxaJuros = parseFloat(document.getElementById('taxa_juros').value);
             var cheques = document.getElementsByClassName('cheque');
-            var resultado = document.getElementById('resultado');
-            resultado.innerHTML = ''; // Limpar o resultado antes de calcular novamente
+            var tabelaResultado = document.getElementById('tabela-resultado');
+            tabelaResultado.innerHTML = ''; // Limpar a tabela antes de calcular novamente
 
             var valorTotalCheques = 0;
             var totalDesconto = 0;
@@ -19,28 +19,45 @@
                 var desconto = valorCheque * (taxaJuros / 100);
                 var valorLiquido = valorCheque - desconto;
 
-                resultado.innerHTML += `
-                    <div class="resultado-item">
-                        <div>Valor do Cheque: R$ ${valorCheque}</div>
-                        <div>Data: ${data}</div>
-                        <div>Desconto: R$ ${desconto.toFixed(2)}</div>
-                        <div>Valor Líquido: R$ ${valorLiquido.toFixed(2)}</div>
-                    </div>
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${valorCheque.toFixed(2)}</td>
+                    <td>${data}</td>
+                    <td>${desconto.toFixed(2)}</td>
+                    <td>${valorLiquido.toFixed(2)}</td>
                 `;
+
+                tabelaResultado.appendChild(row);
 
                 valorTotalCheques += valorCheque;
                 totalDesconto += desconto;
                 totalDescontado += valorLiquido;
             }
 
-            resultado.innerHTML += `
-                <div class="resultado-total">
-                    <div>Quantidade de Cheques: ${cheques.length}</div>
-                    <div>Valor Total dos Cheques: R$ ${valorTotalCheques.toFixed(2)}</div>
-                    <div>Total do Desconto: R$ ${totalDesconto.toFixed(2)}</div>
-                    <div>Valor Total Descontado: R$ ${totalDescontado.toFixed(2)}</div>
-                </div>
+            var totalRow = document.createElement('tr');
+            totalRow.innerHTML = `
+                <td colspan="4">
+                    <strong>Total</strong>
+                </td>
             `;
+
+            var totalChequesCell = document.createElement('td');
+            totalChequesCell.textContent = valorTotalCheques.toFixed(2);
+            totalRow.appendChild(totalChequesCell);
+
+            var emptyCells = Array(3).fill(null).map(function () {
+                return document.createElement('td');
+            });
+
+            var totalDescontoCell = document.createElement('td');
+            totalDescontoCell.textContent = totalDesconto.toFixed(2);
+            totalRow.appendChild(totalDescontoCell);
+
+            var totalDescontadoCell = document.createElement('td');
+            totalDescontadoCell.textContent = totalDescontado.toFixed(2);
+            totalRow.appendChild(totalDescontadoCell);
+
+            tabelaResultado.appendChild(totalRow);
         }
 
         function adicionarCheque() {
@@ -57,17 +74,21 @@
         }
     </script>
     <style>
-        .resultado-item {
-            margin-bottom: 10px;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 5px;
+        table {
+            border-collapse: collapse;
         }
 
-        .resultado-total {
-            font-weight: bold;
-            margin-top: 20px;
-            padding-top: 10px;
-            border-top: 1px solid #ccc;
+        table, th, td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+
+        th {
+            background-color: #ccc;
+        }
+
+        #tabela-resultado td[colspan="4"] {
+            text-align: right;
         }
     </style>
 </head>
@@ -89,6 +110,14 @@
 
     <button type="button" onclick="calcularDesconto()">Calcular</button>
 
-    <div id="resultado"></div>
+    <h3>Resultado:</h3>
+    <table id="tabela-resultado">
+        <tr>
+            <th>Valor do Cheque</th>
+            <th>Data</th>
+            <th>Desconto</th>
+            <th>Valor Líquido</th>
+        </tr>
+    </table>
 </body>
 </html>
