@@ -118,9 +118,13 @@
             var taxaJuros = parseFloat(document.getElementById('taxa_juros').value);
             var cheques = document.getElementsByClassName('cheque');
 
-            var tabelaResultado = document.getElementById('tabela-resultado');
-            var tbody = tabelaResultado.querySelector('tbody');
-            tbody.innerHTML = '';
+            var tabelaCheques = document.getElementById('tabela-cheques');
+            var tbodyCheques = tabelaCheques.querySelector('tbody');
+            tbodyCheques.innerHTML = '';
+
+            var tabelaTotais = document.getElementById('tabela-totais');
+            var tbodyTotais = tabelaTotais.querySelector('tbody');
+            tbodyTotais.innerHTML = '';
 
             var valorTotalCheques = 0;
             var totalDesconto = 0;
@@ -134,7 +138,7 @@
                 var dataVencimento = moment(data, 'YYYY-MM-DD');
 
                 // Calcula a diferença em dias entre a data atual e a data de vencimento
-                var diffDays = dataVencimento.diff(dataAtual, 'days') + 3;
+                var diffDays = dataVencimento.diff(dataAtual, 'days');
 
                 var desconto = (valorCheque * taxaJuros * diffDays) / 30 / 100;
                 var valorLiquido = valorCheque - desconto;
@@ -147,15 +151,13 @@
                     <td>$${valorLiquido.toFixed(2)}</td>
                 `;
 
-                tbody.appendChild(row);
+                tbodyCheques.appendChild(row);
 
                 valorTotalCheques += valorCheque;
                 totalDesconto += desconto;
                 totalDescontado += valorLiquido;
             }
 
-            var tfoot = tabelaResultado.querySelector('tfoot');
-            tfoot.innerHTML = '';
             var totalRow = document.createElement('tr');
             totalRow.innerHTML = `
                 <td colspan="4">
@@ -166,7 +168,7 @@
                 <td>$${totalDesconto.toFixed(2)}</td>
                 <td>$${totalDescontado.toFixed(2)}</td>
             `;
-            tfoot.appendChild(totalRow);
+            tbodyTotais.appendChild(totalRow);
         }
 
         function adicionarCheque() {
@@ -201,8 +203,8 @@
 
     <button type="button" onclick="calcularDesconto()">Calcular</button>
 
-    <h3>Resultado:</h3>
-    <table id="tabela-resultado">
+    <h3>Detalhes dos Cheques:</h3>
+    <table id="tabela-cheques">
         <thead>
             <tr>
                 <th>Valor do Cheque</th>
@@ -212,7 +214,19 @@
             </tr>
         </thead>
         <tbody></tbody>
-        <tfoot></tfoot>
+    </table>
+
+    <h3>Totais:</h3>
+    <table id="tabela-totais">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>Total Desconto</th>
+                <th>Total Descontado</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
     </table>
 </body>
 </html>
