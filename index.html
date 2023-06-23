@@ -113,57 +113,61 @@
     </style>
     </style>
     <script>
-        function calcularDesconto() {
-            var taxaJuros = parseFloat(document.getElementById('taxa_juros').value);
-            var cheques = document.getElementsByClassName('cheque');
+		function calcularDesconto() {
+			var taxaJuros = parseFloat(document.getElementById('taxa_juros').value);
+			var cheques = document.getElementsByClassName('cheque');
 
-            var tabelaResultado = document.getElementById('tabela-resultado');
-            var tbody = tabelaResultado.querySelector('tbody');
-            tbody.innerHTML = '';
+			var tabelaResultado = document.getElementById('tabela-resultado');
+			var tbody = tabelaResultado.querySelector('tbody');
+			tbody.innerHTML = '';
 
-            var valorTotalCheques = 0;
-            var totalDesconto = 0;
-            var totalDescontado = 0;
+			var valorTotalCheques = 0;
+			var totalDesconto = 0;
+			var totalDescontado = 0;
 
-            for (var i = 0; i < cheques.length; i++) {
-                var valorCheque = parseFloat(cheques[i].querySelector('.valor_cheque').value);
-                var data = cheques[i].querySelector('.data').value;
-                var dataVencimento = new Date(data);
-                dataVencimento.setDate(dataVencimento.getDate() + 2); // Adiciona 2 dias para compensação
+			var dataAtual = new Date();
 
-                var desconto = (valorCheque * taxaJuros) / 100;
-                var valorLiquido = valorCheque - desconto;
+			for (var i = 0; i < cheques.length; i++) {
+				var valorCheque = parseFloat(cheques[i].querySelector('.valor_cheque').value);
+				var data = cheques[i].querySelector('.data').value;
+				var dataVencimento = new Date(data);
 
-                var row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>$${valorCheque.toFixed(2)}</td>
-                    <td>${data}</td>
-                    <td>$${desconto.toFixed(2)}</td>
-                    <td>$${valorLiquido.toFixed(2)}</td>
-                `;
+				// Calcula a diferença em dias entre a data atual e a data de vencimento
+				var diffTime = Math.abs(dataVencimento - dataAtual) + 2;
+				var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                tbody.appendChild(row);
+				var desconto = (valorCheque * taxaJuros * diffDays) / 30 / 100;
+				var valorLiquido = valorCheque - desconto;
 
-                valorTotalCheques += valorCheque;
-                totalDesconto += desconto;
-                totalDescontado += valorLiquido;
-            }
+				var row = document.createElement('tr');
+				row.innerHTML = `
+					<td>$${valorCheque.toFixed(2)}</td>
+					<td>${data}</td>
+					<td>$${desconto.toFixed(2)}</td>
+					<td>$${valorLiquido.toFixed(2)}</td>
+				`;
 
-            var tfoot = tabelaResultado.querySelector('tfoot');
-            tfoot.innerHTML = '';
-            var totalRow = document.createElement('tr');
-            totalRow.innerHTML = `
-                <td colspan="4">
-                    <strong>Total</strong>
-                </td>
-                <td>$${valorTotalCheques.toFixed(2)}</td>
-                <td></td>
-                <td>$${totalDesconto.toFixed(2)}</td>
-                <td>$${totalDescontado.toFixed(2)}</td>
-            `;
-            tfoot.appendChild(totalRow);
-        }
+				tbody.appendChild(row);
 
+				valorTotalCheques += valorCheque;
+				totalDesconto += desconto;
+				totalDescontado += valorLiquido;
+			}
+
+			var tfoot = tabelaResultado.querySelector('tfoot');
+			tfoot.innerHTML = '';
+			var totalRow = document.createElement('tr');
+			totalRow.innerHTML = `
+				<td colspan="4">
+					<strong>Total</strong>
+				</td>
+				<td>$${valorTotalCheques.toFixed(2)}</td>
+				<td></td>
+				<td>$${totalDesconto.toFixed(2)}</td>
+				<td>$${totalDescontado.toFixed(2)}</td>
+			`;
+			tfoot.appendChild(totalRow);
+		}
         function adicionarCheque() {
             var chequesWrapper = document.getElementById('cheques');
             var novoCheque = document.createElement('div');
