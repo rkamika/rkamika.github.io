@@ -2,6 +2,94 @@
 <html>
 <head>
     <title>Calculadora de Desconto</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4caf50;
+            color: #fff;
+        }
+
+        tfoot td {
+            font-weight: bold;
+        }
+
+        @media (min-width: 768px) {
+            /* Estilos para telas maiores */
+            body {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 40px;
+            }
+
+            label {
+                width: 150px;
+                display: inline-block;
+                margin-bottom: 0;
+            }
+
+            input {
+                width: 200px;
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            button {
+                display: inline-block;
+                vertical-align: middle;
+                margin-left: 10px;
+            }
+        }
+    </style>
     <script>
         function calcularDesconto() {
             var taxaJuros = parseFloat(document.getElementById('taxa_juros').value);
@@ -34,6 +122,7 @@
                 totalDescontado += valorLiquido;
             }
 
+            var tfoot = document.createElement('tfoot');
             var totalRow = document.createElement('tr');
             totalRow.innerHTML = `
                 <td colspan="4">
@@ -57,7 +146,8 @@
             totalDescontadoCell.textContent = totalDescontado.toFixed(2);
             totalRow.appendChild(totalDescontadoCell);
 
-            tabelaResultado.appendChild(totalRow);
+            tfoot.appendChild(totalRow);
+            tabelaResultado.appendChild(tfoot);
         }
 
         function adicionarCheque() {
@@ -73,24 +163,6 @@
             chequesWrapper.appendChild(novoCheque);
         }
     </script>
-    <style>
-        table {
-            border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 1px solid black;
-            padding: 5px;
-        }
-
-        th {
-            background-color: #ccc;
-        }
-
-        #tabela-resultado td[colspan="4"] {
-            text-align: right;
-        }
-    </style>
 </head>
 <body>
     <h1>Calculadora de Desconto</h1>
@@ -112,12 +184,15 @@
 
     <h3>Resultado:</h3>
     <table id="tabela-resultado">
-        <tr>
-            <th>Valor do Cheque</th>
-            <th>Data</th>
-            <th>Desconto</th>
-            <th>Valor Líquido</th>
-        </tr>
+        <thead>
+            <tr>
+                <th>Valor do Cheque</th>
+                <th>Data</th>
+                <th>Desconto</th>
+                <th>Valor Líquido</th>
+            </tr>
+        </thead>
+        <tfoot></tfoot>
     </table>
 </body>
 </html>
