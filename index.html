@@ -138,7 +138,7 @@
                 var dataVencimento = moment(data, 'YYYY-MM-DD');
 
                 // Calcula a diferença em dias entre a data atual e a data de vencimento
-                var diffDays = dataVencimento.diff(dataAtual, 'days');
+                var diffDays = dataVencimento.diff(dataAtual, 'days') + 3;
 
                 var desconto = (valorCheque * taxaJuros * diffDays) / 30 / 100;
                 var valorLiquido = valorCheque - desconto;
@@ -221,7 +221,7 @@
         <thead>
             <tr>
                 <th></th>
-                <th></th>
+                <th>Total Cheques</th>
                 <th>Total Desconto</th>
                 <th>Total Descontado</th>
             </tr>
