@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculadora de Desconto</title>
+</head>
+<body>
+    <h1>Calculadora de Desconto</h1>
+    <form action="/calcular" method="post">
+        <label for="taxa_juros">Taxa de Juros Mensal (%):</label>
+        <input type="number" id="taxa_juros" name="taxa_juros" step="0.01" required><br><br>
+
+        <h3>Cheques:</h3>
+        <div id="cheques">
+            <div class="cheque">
+                <label for="valor_cheque_1">Valor do Cheque:</label>
+                <input type="number" id="valor_cheque_1" name="valor_cheque_1" step="0.01" required>
+                <label for="data_1">Data:</label>
+                <input type="date" id="data_1" name="data_1" required>
+            </div>
+        </div>
+        <button type="button" onclick="adicionarCheque()">Adicionar Cheque</button><br><br>
+
+        <input type="submit" value="Calcular
