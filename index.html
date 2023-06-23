@@ -4,7 +4,113 @@
     <title>Calculadora de Desconto</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Estilos CSS aqui... */
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f8f8f8;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        input:focus {
+            background-color: #fff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        th, td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4caf50;
+            color: #fff;
+            font-weight: normal;
+        }
+
+        tfoot td {
+            font-weight: bold;
+        }
+
+        @media (min-width: 768px) {
+            /* Estilos para telas maiores */
+            body {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 40px;
+            }
+
+            label {
+                width: 150px;
+                display: inline-block;
+                margin-bottom: 0;
+            }
+
+            input {
+                width: 200px;
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            button {
+                display: inline-block;
+                vertical-align: middle;
+                margin-left: 10px;
+            }
+        }
+    </style>
     </style>
     <script src="https://momentjs.com/downloads/moment.min.js"></script>
     <script>
@@ -28,7 +134,7 @@
                 var dataVencimento = moment(data, 'YYYY-MM-DD');
 
                 // Calcula a diferença em dias entre a data atual e a data de vencimento
-                var diffDays = dataVencimento.diff(dataAtual, 'days') + 2;
+                var diffDays = dataVencimento.diff(dataAtual, 'days') + 3;
 
                 var desconto = (valorCheque * taxaJuros * diffDays) / 30 / 100;
                 var valorLiquido = valorCheque - desconto;
