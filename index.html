@@ -2,6 +2,28 @@
 <html>
 <head>
     <title>Calculadora de Desconto</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var maxCheques = 5; // Número máximo de cheques
+            var chequesWrapper = $("#cheques");
+
+            // Função para adicionar um novo campo de cheque
+            $("#adicionarCheque").click(function() {
+                if (chequesWrapper.children().length < maxCheques) {
+                    var novoCheque = `
+                        <div class="cheque">
+                            <label for="valor_cheque_${chequesWrapper.children().length + 1}">Valor do Cheque:</label>
+                            <input type="number" id="valor_cheque_${chequesWrapper.children().length + 1}" name="valor_cheque_${chequesWrapper.children().length + 1}" step="0.01" required>
+                            <label for="data_${chequesWrapper.children().length + 1}">Data:</label>
+                            <input type="date" id="data_${chequesWrapper.children().length + 1}" name="data_${chequesWrapper.children().length + 1}" required>
+                        </div>
+                    `;
+                    chequesWrapper.append(novoCheque);
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <h1>Calculadora de Desconto</h1>
@@ -18,6 +40,9 @@
                 <input type="date" id="data_1" name="data_1" required>
             </div>
         </div>
-        <button type="button" onclick="adicionarCheque()">Adicionar Cheque</button><br><br>
+        <button type="button" id="adicionarCheque">Adicionar Cheque</button><br><br>
 
-        <input type="submit" value="Calcular
+        <input type="submit" value="Calcular">
+    </form>
+</body>
+</html>
