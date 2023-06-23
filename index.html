@@ -2,47 +2,93 @@
 <html>
 <head>
     <title>Calculadora de Desconto</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
-            var maxCheques = 5; // Número máximo de cheques
-            var chequesWrapper = $("#cheques");
+        function calcularDesconto() {
+            var taxaJuros = parseFloat(document.getElementById('taxa_juros').value);
+            var cheques = document.getElementsByClassName('cheque');
+            var resultado = document.getElementById('resultado');
+            resultado.innerHTML = ''; // Limpar o resultado antes de calcular novamente
 
-            // Função para adicionar um novo campo de cheque
-            $("#adicionarCheque").click(function() {
-                if (chequesWrapper.children().length < maxCheques) {
-                    var novoCheque = `
-                        <div class="cheque">
-                            <label for="valor_cheque_${chequesWrapper.children().length + 1}">Valor do Cheque:</label>
-                            <input type="number" id="valor_cheque_${chequesWrapper.children().length + 1}" name="valor_cheque_${chequesWrapper.children().length + 1}" step="0.01" required>
-                            <label for="data_${chequesWrapper.children().length + 1}">Data:</label>
-                            <input type="date" id="data_${chequesWrapper.children().length + 1}" name="data_${chequesWrapper.children().length + 1}" required>
-                        </div>
-                    `;
-                    chequesWrapper.append(novoCheque);
-                }
-            });
-        });
+            var valorTotalCheques = 0;
+            var totalDesconto = 0;
+            var totalDescontado = 0;
+
+            for (var i = 0; i < cheques.length; i++) {
+                var valorCheque = parseFloat(cheques[i].querySelector('.valor_cheque').value);
+                var data = cheques[i].querySelector('.data').value;
+                var desconto = valorCheque * (taxaJuros / 100);
+                var valorLiquido = valorCheque - desconto;
+
+                resultado.innerHTML += `
+                    <div class="resultado-item">
+                        <div>Valor do Cheque: R$ ${valorCheque}</div>
+                        <div>Data: ${data}</div>
+                        <div>Desconto: R$ ${desconto.toFixed(2)}</div>
+                        <div>Valor Líquido: R$ ${valorLiquido.toFixed(2)}</div>
+                    </div>
+                `;
+
+                valorTotalCheques += valorCheque;
+                totalDesconto += desconto;
+                totalDescontado += valorLiquido;
+            }
+
+            resultado.innerHTML += `
+                <div class="resultado-total">
+                    <div>Quantidade de Cheques: ${cheques.length}</div>
+                    <div>Valor Total dos Cheques: R$ ${valorTotalCheques.toFixed(2)}</div>
+                    <div>Total do Desconto: R$ ${totalDesconto.toFixed(2)}</div>
+                    <div>Valor Total Descontado: R$ ${totalDescontado.toFixed(2)}</div>
+                </div>
+            `;
+        }
+
+        function adicionarCheque() {
+            var chequesWrapper = document.getElementById('cheques');
+            var novoCheque = document.createElement('div');
+            novoCheque.className = 'cheque';
+            novoCheque.innerHTML = `
+                <label for="valor_cheque_${chequesWrapper.childElementCount + 1}">Valor do Cheque:</label>
+                <input type="number" class="valor_cheque" step="0.01" required>
+                <label for="data_${chequesWrapper.childElementCount + 1}">Data:</label>
+                <input type="date" class="data" required>
+            `;
+            chequesWrapper.appendChild(novoCheque);
+        }
     </script>
+    <style>
+        .resultado-item {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+
+        .resultado-total {
+            font-weight: bold;
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
     <h1>Calculadora de Desconto</h1>
-    <form action="/calcular" method="get"> <!-- Alteração aqui: método POST -->
-        <label for="taxa_juros">Taxa de Juros Mensal (%):</label>
-        <input type="number" id="taxa_juros" name="taxa_juros" step="0.01" required><br><br>
+    <label for="taxa_juros">Taxa de Juros Mensal (%):</label>
+    <input type="number" id="taxa_juros" step="0.01" required><br><br>
 
-        <h3>Cheques:</h3>
-        <div id="cheques">
-            <div class="cheque">
-                <label for="valor_cheque_1">Valor do Cheque:</label>
-                <input type="number" id="valor_cheque_1" name="valor_cheque_1" step="0.01" required>
-                <label for="data_1">Data:</label>
-                <input type="date" id="data_1" name="data_1" required>
-            </div>
+    <h3>Cheques:</h3>
+    <div id="cheques">
+        <div class="cheque">
+            <label for="valor_cheque_1">Valor do Cheque:</label>
+            <input type="number" class="valor_cheque" step="0.01" required>
+            <label for="data_1">Data:</label>
+            <input type="date" class="data" required>
         </div>
-        <button type="button" id="adicionarCheque">Adicionar Cheque</button><br><br>
+    </div>
+    <button type="button" onclick="adicionarCheque()">Adicionar Cheque</button><br><br>
 
-        <input type="submit" value="Calcular"> <!-- Alteração aqui: tipo de botão para submit -->
-    </form>
+    <button type="button" onclick="calcularDesconto()">Calcular</button>
+
+    <div id="resultado"></div>
 </body>
 </html>
