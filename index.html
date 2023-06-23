@@ -133,8 +133,8 @@
 				var dataVencimento = new Date(data);
 
 				// Calcula a diferença em dias entre a data atual e a data de vencimento
-				var diffTime = Math.abs(dataVencimento - dataAtual) + 2;
-				var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+				var diffTime = Math.abs(dataVencimento - dataAtual);
+				var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 2;
 
 				var desconto = (valorCheque * taxaJuros * diffDays) / 30 / 100;
 				var valorLiquido = valorCheque - desconto;
