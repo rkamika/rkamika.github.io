@@ -8,7 +8,7 @@ def index():
 
 @app.route('/calcular', methods=['GET', 'POST'])
 def calcular():
-    if request.method == 'POST':
+    if request.method == 'POST' or request.method == 'GET':
         cheques = []
         for i in range(1, 6):  # Considerando até 5 cheques, você pode ajustar esse valor conforme necessário
             if f'valor_cheque_{i}' in request.form:
