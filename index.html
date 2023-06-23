@@ -4,6 +4,7 @@
     <title>Calculadora de Desconto</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+    <style>
         * {
             box-sizing: border-box;
         }
@@ -110,63 +111,77 @@
             }
         }
     </style>
+    </style>
     <script>
-		function calcularDesconto() {
-			var taxaJuros = parseFloat(document.getElementById('taxa_juros').value);
-			var cheques = document.getElementsByClassName('cheque');
+        function calcularDesconto() {
+            var taxaJuros = parseFloat(document.getElementById('taxa_juros').value);
+            var cheques = document.getElementsByClassName('cheque');
 
-			var tabelaResultado = document.getElementById('tabela-resultado');
-			var tbody = tabelaResultado.querySelector('tbody');
-			tbody.innerHTML = '';
+            var tabelaResultado = document.getElementById('tabela-resultado');
+            var tbody = tabelaResultado.querySelector('tbody');
+            tbody.innerHTML = '';
 
-			var valorTotalCheques = 0;
-			var totalDesconto = 0;
-			var totalDescontado = 0;
+            var valorTotalCheques = 0;
+            var totalDesconto = 0;
+            var totalDescontado = 0;
 
-			for (var i = 0; i < cheques.length; i++) {
-				var valorCheque = parseFloat(cheques[i].querySelector('.valor_cheque').value);
-				var data = cheques[i].querySelector('.data').value;
-				var dataVencimento = new Date(data);
-				dataVencimento.setDate(dataVencimento.getDate() + 2); // Adiciona 2 dias para compensação
+            for (var i = 0; i < cheques.length; i++) {
+                var valorCheque = parseFloat(cheques[i].querySelector('.valor_cheque').value);
+                var data = cheques[i].querySelector('.data').value;
+                var dataVencimento = new Date(data);
+                dataVencimento.setDate(dataVencimento.getDate() + 2); // Adiciona 2 dias para compensação
 
-				var desconto = (valorCheque * taxaJuros) / 100;
-				var valorLiquido = valorCheque - desconto;
+                var desconto = (valorCheque * taxaJuros) / 100;
+                var valorLiquido = valorCheque - desconto;
 
-				var row = document.createElement('tr');
-				row.innerHTML = `
-					<td>$${valorCheque.toFixed(2)}</td>
-					<td>${data}</td>
-					<td>$${desconto.toFixed(2)}</td>
-					<td>$${valorLiquido.toFixed(2)}</td>
-				`;
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>$${valorCheque.toFixed(2)}</td>
+                    <td>${data}</td>
+                    <td>$${desconto.toFixed(2)}</td>
+                    <td>$${valorLiquido.toFixed(2)}</td>
+                `;
 
-				tbody.appendChild(row);
+                tbody.appendChild(row);
 
-				valorTotalCheques += valorCheque;
-				totalDesconto += desconto;
-				totalDescontado += valorLiquido;
-			}
+                valorTotalCheques += valorCheque;
+                totalDesconto += desconto;
+                totalDescontado += valorLiquido;
+            }
 
-			var tfoot = tabelaResultado.querySelector('tfoot');
-			tfoot.innerHTML = '';
-			var totalRow = document.createElement('tr');
-			totalRow.innerHTML = `
-				<td colspan="4">
-					<strong>Total</strong>
-				</td>
-				<td>$${valorTotalCheques.toFixed(2)}</td>
-				<td></td>
-				<td>$${totalDesconto.toFixed(2)}</td>
-				<td>$${totalDescontado.toFixed(2)}</td>
-			`;
-			tfoot.appendChild(totalRow);
-		}
+            var tfoot = tabelaResultado.querySelector('tfoot');
+            tfoot.innerHTML = '';
+            var totalRow = document.createElement('tr');
+            totalRow.innerHTML = `
+                <td colspan="4">
+                    <strong>Total</strong>
+                </td>
+                <td>$${valorTotalCheques.toFixed(2)}</td>
+                <td></td>
+                <td>$${totalDesconto.toFixed(2)}</td>
+                <td>$${totalDescontado.toFixed(2)}</td>
+            `;
+            tfoot.appendChild(totalRow);
+        }
+
+        function adicionarCheque() {
+            var chequesWrapper = document.getElementById('cheques');
+            var novoCheque = document.createElement('div');
+            novoCheque.className = 'cheque';
+            novoCheque.innerHTML = `
+                <label for="valor_cheque_${chequesWrapper.childElementCount + 1}">Valor do Cheque:</label>
+                <input type="number" class="valor_cheque" step="0.01" required>
+                <label for="data_${chequesWrapper.childElementCount + 1}">Data:</label>
+                <input type="date" class="data" required>
+            `;
+            chequesWrapper.appendChild(novoCheque);
+        }
     </script>
 </head>
 <body>
     <h1>Calculadora de Desconto</h1>
     <label for="taxa_juros">Taxa de Juros Mensal (%):</label>
-    <input type="number" id="taxa_juros" step="0.01" required>
+    <input type="number" id="taxa_juros" step="0.01" required><br><br>
 
     <h3>Cheques:</h3>
     <div id="cheques">
