@@ -91,10 +91,6 @@
             var tbodyCheques = tabelaCheques.querySelector('tbody');
             tbodyCheques.innerHTML = '';
 
-            var tabelaTotais = document.getElementById('tabela-totais');
-            var tbodyTotais = tabelaTotais.querySelector('tbody');
-            tbodyTotais.innerHTML = '';
-
             var valorTotalCheques = 0;
             var totalDesconto = 0;
             var totalDescontado = 0;
@@ -127,17 +123,13 @@
                 totalDescontado += valorLiquido;
             }
 
-            var totalRow = document.createElement('tr');
-            totalRow.innerHTML = `
-                <td colspan="4">
-                    <strong>Total</strong>
-                </td>
-                <td>$${valorTotalCheques.toFixed(2)}</td>
-                <td></td>
-                <td>$${totalDesconto.toFixed(2)}</td>
-                <td>$${totalDescontado.toFixed(2)}</td>
-            `;
-            tbodyTotais.appendChild(totalRow);
+            var totalQuantidade = cheques.length;
+            var totalValor = valorTotalCheques.toFixed(2);
+
+            document.getElementById('total-quantidade').innerText = totalQuantidade;
+            document.getElementById('total-valor').innerText = totalValor;
+            document.getElementById('total-desconto').innerText = totalDesconto.toFixed(2);
+            document.getElementById('total-descontado').innerText = totalDescontado.toFixed(2);
         }
 
         function adicionarCheque() {
@@ -153,7 +145,6 @@
             chequesWrapper.appendChild(novoCheque);
         }
     </script>
-
 </head>
 <body>
     <h1>Calculadora de Desconto</h1>
@@ -187,20 +178,11 @@
     </table>
 
     <h3>Totais:</h3>
-    <table id="tabela-totais">
-        <thead>
-            <tr>
-                <th></th>
-                <th></th>
-                <th>Total Desconto</th>
-                <th>Total Descontado</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-
-    <script>
-        // Código JavaScript aqui...
-    </script>
+    <p>
+        Quantidade de Cheques: <span id="total-quantidade"></span><br>
+        Valor Total dos Cheques: $<span id="total-valor"></span><br>
+        Total de Desconto: $<span id="total-desconto"></span><br>
+        Valor Total Descontado: $<span id="total-descontado"></span>
+    </p>
 </body>
 </html>
